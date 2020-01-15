@@ -4,13 +4,21 @@ import (
 	"encoding/json"
 )
 
-type Response struct {
+type Resp struct {
 	Code    string      `json:"code"`
-	Message string      `json:"message,omitempty"`
-	Data    interface{} `json:"data,omitempty"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
-func (o *Response) MarshalJson() (string, error) {
+func New(code, message string, data interface{}) Resp {
+	return Resp{
+		Code:    code,
+		Message: message,
+		Data:    data,
+	}
+}
+
+func (o *Resp) MarshalJson() (string, error) {
 	jsonBytes, err := json.Marshal(o)
 	if err != nil {
 		return "", err
@@ -19,6 +27,6 @@ func (o *Response) MarshalJson() (string, error) {
 	return string(jsonBytes), nil
 }
 
-func (o *Response) UnmarshalJson(data string) error {
+func (o *Resp) UnmarshalJson(data string) error {
 	return json.Unmarshal([]byte(data), o)
 }

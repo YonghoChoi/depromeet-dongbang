@@ -21,5 +21,9 @@ func main() {
 		return c.String(http.StatusOK, "0.0.0")
 	})
 
+	e.POST("/join", Join)
+	e.POST("/login", Login)
+	e.GET("/api/users", GetUsers)
+
 	e.Logger.Fatal(e.Start(":8000"))
 }
