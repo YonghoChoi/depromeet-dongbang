@@ -2,42 +2,23 @@ package packet
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 )
 
 type Response struct {
-	ID ID
+	Code    string      `json:"code"`
+	Message string      `json:"message,omitempty"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
-type ResponseError struct {
-	Err error
+func (o *Response) MarshalJson() (string, error) {
+	jsonBytes, err := json.Marshal(o)
+	if err != nil {
+		return "", err
+	}
+
+	return string(jsonBytes), nil
 }
 
-func (err ResponseError) MarshalJSON() ([]byte, error) {
-	if err.Err == nil {
-		return []byte("null"), nil
-	}
-
-	return []byte(fmt.Sprintf("\"%v\"", err.Err)), nil
-}
-
-func (err *ResponseError) UnmarshalJSON(b []byte) error {
-	var v interface{}
-	if err := json.Unmarshal(b, v); err != nil {
-		return err
-	}
-
-	if v == nil {
-		err.Err = nil
-		return nil
-	}
-
-	switch tv := v.(type) {
-	case string:
-		err.Err = errors.New(tv)
-		return nil
-	default:
-		return errors.New("ResponseError unmarshal failed")
-	}
+func (o *Response) UnmarshalJson(data string) error {
+	return json.Unmarshal([]byte(data), o)
 }
