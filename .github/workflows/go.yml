@@ -20,7 +20,7 @@ jobs:
 
     - name: Get dependencies
       run: |
-        go mod init example.com
+        go mod init github.com/YonghoChoi/depromeet-dongbang
         go mod tidy
 
     - name: Build

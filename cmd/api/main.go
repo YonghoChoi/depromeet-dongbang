@@ -1,8 +1,8 @@
 package main
 
 import (
-	"example.com/cmd/api/conf"
 	"flag"
+	"github.com/YonghoChoi/depromeet-dongbang/cmd/api/conf"
 	"github.com/labstack/echo"
 	"net/http"
 )

@@ -2,8 +2,8 @@ package db
 
 import (
 	"context"
-	"example.com/cmd/api/conf"
 	"flag"
+	"github.com/YonghoChoi/depromeet-dongbang/cmd/api/conf"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
 	"testing"

@@ -2,7 +2,7 @@ package db
 
 import (
 	"context"
-	"example.com/cmd/api/conf"
+	"github.com/YonghoChoi/depromeet-dongbang/cmd/api/conf"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
