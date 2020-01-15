@@ -1,14 +1,16 @@
 name: Go
-on: [push]
+on:
+  push:         # 이 workflow를 실행시킬 조건 (여기서는 push가 발생했을 때 workflow가 실행됨)
+    branches:
+      - master
 jobs:
-
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
 
     - name: Set up Go 1.13
-      uses: actions/setup-go@v1
+      uses: actions/setup-go@v1 # 이미 만들어진 명령이 있는 경우 가져다 사용
       with:
         go-version: 1.13
       id: go
