@@ -23,17 +23,15 @@ func (d *Deadline) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-type status int
-
 const (
-	UNKNOWN status = iota
+	UNKNOWN int = iota
 	TODO
 	DONE
 )
 
 type Task struct {
 	Title    string
-	Status   status
+	Status   int
 	Deadline *Deadline
 	Priority int
 }
