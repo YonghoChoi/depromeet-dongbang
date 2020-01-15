@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "a572d790-7bfc-4c49-8846-3208cca636c8",
+		"name": "depromeet-dongbang",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "join",
+			"protocolProfileBehavior": {
+				"tlsCipherSelection": [
+					"-----BEGIN",
+					"CERTIFICATE-----",
+					"MIIDfzCCAmcCFEReF2dlTNUyaNKG5ql+pvN2oR18MA0GCSqGSIb3DQEBCwUAMHwx",
+					"CzAJBgNVBAYTAktSMQ4wDAYDVQQIDAVTZW91bDERMA8GA1UEBwwIR2FuZy1uYW0x",
+					"FzAVBgNVBAoMDlNlY3VyZVNpZ24gSW5jMREwDwYDVQQLDAhEZXYgVGVhbTEeMBwG",
+					"A1UEAwwVcGVuZ2hhLnlvbmdob2Nob2kuY29tMB4XDTE5MTEyMzA4NDY1NVoXDTIw",
+					"MTEyMjA4NDY1NVowfDELMAkGA1UEBhMCS1IxDjAMBgNVBAgMBVNlb3VsMREwDwYD",
+					"VQQHDAhHYW5nLW5hbTEXMBUGA1UECgwOU2VjdXJlU2lnbiBJbmMxETAPBgNVBAsM",
+					"CERldiBUZWFtMR4wHAYDVQQDDBVwZW5naGEueW9uZ2hvY2hvaS5jb20wggEiMA0G",
+					"CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDAt9Kr5ceUS5GRzeW+PQrgua2+9OE2",
+					"G3HYt3pGcO0465xSEYYsUbLx6huUvMn6GtF8Rw1pJBUTrUv4riPnibSFYkwFQXeh",
+					"OCiyxBzQZCBUDHr9GKnVGzNYJnRZNpRe/CGoTsv8n1iwRbeuVBkPTLL0BRs8c27y",
+					"rXFGw/dIFsMPq0MjPBDByM1vIPukLtSrrcnenoulSQRNX6JrmTAt447IBi9/bFw8",
+					"wGJPlaY2OK6uMy+Duvl6iWfqZ8f35FK4eLAgdu3CiF0nL4d20ne8lX0VRCNk6aFl",
+					"TxaG2vNX5CDRK7r8RiFur1Ak6V5Nvwv/5knKXNuRCd4fJGuwhUF1gqTdAgMBAAEw",
+					"DQYJKoZIhvcNAQELBQADggEBAJoPpUbfTUMHoc6CEOC2q7oItt1f6f/sf+i58UIi",
+					"WjAgdPc/tdUFS2btUts8joQY3Fq1dkKI6+flwqMzr0fHHUqEM2qrcRM0+0x/VjsE",
+					"CLGh1LN9euHRrTvOXFpPx13vSsWpj/jBAJoqhTS1XThzx/vWQnoVs0D9HIz5vmxG",
+					"Bxhb2aptcVT27WGn7FXOkzz1xf3RlQsXBK/0JzuiknCCTZmDPLZD5VMfiuXFYCQA",
+					"ojx1Tr/ezfCcqwK4ve+Q6dKqjuCIyDWML4p7UM4J7NeXTwX0LIAMqs/Fkvg8J1XF",
+					"9g+1mDkQYWSZFTHWpaGUJC4DFHZz7JVcvlTPGKf/ex2D+3A=",
+					"-----END",
+					"CERTIFICATE-----"
+				]
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"user2\",\n    \"token\": \"290e4cf3-6328-4ec0-a5ce-d57a62c8365f\"\n}"
+				},
+				"url": {
+					"raw": "{{endpoint}}/join",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"user2\",\n    \"token\": \"290e4cf3-6328-4ec0-a5ce-d57a62c8365f\"\n}"
+				},
+				"url": {
+					"raw": "{{endpoint}}/login",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUsers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/api/users",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

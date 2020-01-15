@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	configPath := flag.String("config", "./config.yml", "Input config file path")
+	configPath := flag.String("config", "./conf/config.yml", "Input config file path")
 	flag.Parse()
 	conf.SetConfigFilePath(*configPath)
 
