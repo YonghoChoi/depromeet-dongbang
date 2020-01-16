@@ -14,7 +14,7 @@ func main() {
 
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "This is dongbang")
+		return c.String(http.StatusOK, "이 앱은 디프만 파이널 프로젝트 동방입니다.")
 	})
 
 	e.GET("/version", func(c echo.Context) error {
