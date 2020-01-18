@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dongbang-api
+  labels:
+    project: "dongbang"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "dongbang-api"
+  template:
+    metadata:
+      labels:
+        app: "dongbang-api"
+        project: "dongbang"
+    spec:
+      initContainers:
+        - name: init-mongo
+          image: busybox:1.28
+          command: ['sh', '-c', 'until nc -z -w5 mongo.default.svc.cluster.local 27017; do echo waiting for mongo; sleep 2; done;']
+      containers:
+        - name: dongbnag-api
+          image: "992189553983.dkr.ecr.ap-northeast-2.amazonaws.com/dongbang-api:fa582934834291b1eb1324693067435f5346ac5e"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: dongbang-api
+          volumeMounts:
+            - mountPath: /opt/dongbang/conf/config.yml
+              name: dongbang-api-config
+              subPath: config.yml
+      volumes:
+        - name: dongbang-api-config
+          configMap:
+            name: dongbang-api-config
+            defaultMode: 420
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "3"

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+  labels:
+    project: "dongbang"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "mongo"
+  template:
+    metadata:
+      labels:
+        app: "mongo"
+        project: "dongbang"
+    spec:
+      containers:
+        - name: mongo
+          image: "mongo"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 27017
+              name: mongo
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc-mongo
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "3"

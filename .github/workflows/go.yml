@@ -46,10 +46,27 @@ jobs:
         ECR_REPOSITORY: dongbang-api
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        ls -l
-        echo $GITHUB_WORKSPACE
         cd $GITHUB_WORKSPACE
-        ls -l
+        export VERSION=`cat version.txt`
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION"
+
+    - name: Deploy dongbang
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: dongbang-api
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        apt-get update
+        apt-get install -y kubectl
+        mkdir -p ~/.kube
+        echo '${{ secrets.kube_config }}' | tee ~/.kube/config
+
+        export VERSION=`cat version.txt`
+        kubectl set image deployment/dongbang-api dongbnag-api=$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
+
+
+
+
+
