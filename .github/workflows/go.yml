@@ -48,8 +48,8 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         export VERSION=`cat version.txt`
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION"
 
     - name: Deploy dongbang
@@ -65,8 +65,3 @@ jobs:
 
         export VERSION=`cat version.txt`
         kubectl set image deployment/dongbang-api dongbnag-api=$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
-
-
-
-
-
