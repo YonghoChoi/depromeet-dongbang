@@ -58,8 +58,8 @@ jobs:
         ECR_REPOSITORY: dongbang-api
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        apt-get update
-        apt-get install -y kubectl
+        sudo apt-get update
+        sudo apt-get install -y kubectl
         mkdir -p ~/.kube
         echo '${{ secrets.kube_config }}' | tee ~/.kube/config
 
