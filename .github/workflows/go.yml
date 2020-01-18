@@ -52,18 +52,19 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSIONK
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION"
 
-    - name: Deploy dongbang
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: dongbang-api
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y openssh-client
-        mkdir -p ~/.ssh
-        echo '${{ secrets.ssh_private_key }}' | tee ~/.ssh/dongbang
-        chmod 400 ~/.ssh/dongbang
-
-        echo '$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION'
-        export VERSION=`cat version.txt`
-        ssh -i ~/.ssh/dongbang -t ubuntu@dongbang.yonghochoi.com kubectl set image deployment/dongbang-api dongbnag-api=$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
+# Github Action Runner의 IP range가 유동적이기 때문에 보안그룹에 등록할 수 없음. self-hosted runner를 사용해야함
+#    - name: Deploy dongbang
+#      env:
+#        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#        ECR_REPOSITORY: dongbang-api
+#        IMAGE_TAG: ${{ github.sha }}
+#      run: |
+#        sudo apt-get update
+#        sudo apt-get install -y openssh-client
+#        mkdir -p ~/.ssh
+#        echo '${{ secrets.ssh_private_key }}' | tee ~/.ssh/dongbang
+#        chmod 400 ~/.ssh/dongbang
+#
+#        echo '$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION'
+#        export VERSION=`cat version.txt`
+#        ssh -i ~/.ssh/dongbang -t ubuntu@dongbang.yonghochoi.com kubectl set image deployment/dongbang-api dongbnag-api=$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
