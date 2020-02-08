@@ -1,4 +1,4 @@
-package user
+package notice
 
 import (
 	"context"
@@ -8,50 +8,50 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-const CollectionName = "users"
+const CollectionName = "notices"
 
-func Insert(u User) error {
-	_, err := db.GetCollection(CollectionName).InsertOne(context.TODO(), u)
+func Insert(o Notice) error {
+	_, err := db.GetCollection(CollectionName).InsertOne(context.TODO(), o)
 	return err
 }
 
-func Delete(u User) error {
+func Delete(o Notice) error {
 	_, err := db.GetCollection(CollectionName).
-		DeleteOne(context.TODO(), bson.M{"_id": u.Id})
+		DeleteOne(context.TODO(), bson.M{"_id": o.Id})
 	return err
 }
 
-func Update(u User) error {
+func Update(o Notice) error {
 	_, err := db.GetCollection(CollectionName).
 		UpdateOne(
 			context.TODO(),
-			bson.M{"_id": u.Id},
-			bson.D{{Key: "$set", Value: u}},
+			bson.M{"_id": o.Id},
+			bson.D{{Key: "$set", Value: o}},
 		)
 	return err
 }
 
-func FindOne(filter bson.D) (User, error) {
-	var u User
+func FindOne(filter bson.D) (Notice, error) {
+	var o Notice
 	result := db.GetCollection(CollectionName).
 		FindOne(context.TODO(), filter)
 
 	if result.Err() != nil {
 		fmt.Println(result.Err().Error())
 		if result.Err() == mongo.ErrNoDocuments || result.Err() == mongo.ErrNilDocument {
-			return u, fmt.Errorf("not exist user")
+			return o, fmt.Errorf("not exist notice")
 		}
 	}
 
-	if err := result.Decode(&u); err != nil {
+	if err := result.Decode(&o); err != nil {
 		fmt.Println(err.Error())
-		return u, fmt.Errorf("invalid user data type")
+		return o, fmt.Errorf("invalid notice data type")
 	}
 
-	return u, nil
+	return o, nil
 }
 
-func Find(filter bson.D) ([]User, error) {
+func Find(filter bson.D) ([]Notice, error) {
 	cur, err := db.GetCollection(CollectionName).
 		Find(context.TODO(), filter)
 
@@ -59,16 +59,16 @@ func Find(filter bson.D) ([]User, error) {
 		return nil, err
 	}
 
-	var users []User
+	var notices []Notice
 	for cur.Next(context.TODO()) {
-		var u User
-		err := cur.Decode(&u)
+		var o Notice
+		err := cur.Decode(&o)
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
 
-		users = append(users, u)
+		notices = append(notices, o)
 	}
 
 	if err := cur.Err(); err != nil {
@@ -78,15 +78,19 @@ func Find(filter bson.D) ([]User, error) {
 	if err := cur.Close(context.TODO()); err != nil {
 		return nil, err
 	}
-	return users, nil
+	return notices, nil
 }
 
-func GetUser(u User) (User, error) {
+func GetNotice(o Notice) (Notice, error) {
 	filter := bson.D{
 		{"$or", []interface{}{
-			bson.D{{"_id", u.Id}},
-			bson.D{{"name", u.Name}},
+			bson.D{{"_id", o.Id}},
 		}},
 	}
 	return FindOne(filter)
+}
+
+func GetNoticeAll() ([]Notice, error) {
+	filter := bson.D{}
+	return Find(filter)
 }

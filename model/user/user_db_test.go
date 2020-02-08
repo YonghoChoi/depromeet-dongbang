@@ -15,7 +15,7 @@ func setup() {
 
 func TestInsert(t *testing.T) {
 	setup()
-	u := New("test user", "test token")
+	u := New("test user", "test token", "")
 	if err := Insert(u); err != nil {
 		t.Fatal(err.Error())
 	}

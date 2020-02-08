@@ -24,6 +24,9 @@ func main() {
 	e.POST("/join", Join)
 	e.POST("/login", Login)
 	e.GET("/api/users", GetUsers)
+	e.GET("/api/notices", GetNotices)
+	e.POST("/api/notices", CreateNotice)
+	e.PUT("/api/notices", EditNotice)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }

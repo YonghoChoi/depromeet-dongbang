@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/YonghoChoi/depromeet-dongbang/cmd/api/service"
+	"github.com/YonghoChoi/depromeet-dongbang/model/notice"
 	"github.com/YonghoChoi/depromeet-dongbang/model/packet"
 	"github.com/YonghoChoi/depromeet-dongbang/model/user"
 	"github.com/labstack/echo"
@@ -81,5 +82,81 @@ func Login(c echo.Context) error {
 	}
 
 	resp.Data = u
+	return nil
+}
+
+func GetNotices(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	notices, err := service.GetNotices()
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+
+	}
+	resp.Data = notices
+	return nil
+}
+
+func CreateNotice(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	var n notice.Notice
+	if err := c.Bind(&n); err != nil {
+		resp.Code = "500"
+		resp.Message = "invalid data"
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	data, err := service.CreateNotice(n)
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	resp.Data = data
+	return nil
+}
+
+func EditNotice(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	id := c.QueryParam("id")
+	var n notice.Notice
+	if err := c.Bind(&n); err != nil {
+		resp.Code = "500"
+		resp.Message = "invalid data"
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	data, err := service.EditNotice(id, n)
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	resp.Data = data
 	return nil
 }
