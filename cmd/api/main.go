@@ -27,6 +27,7 @@ func main() {
 	e.GET("/api/notices", GetNotices)
 	e.POST("/api/notices", CreateNotice)
 	e.PUT("/api/notices", EditNotice)
+	e.DELETE("/api/notices", DelNotice)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }

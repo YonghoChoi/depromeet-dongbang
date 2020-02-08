@@ -44,3 +44,15 @@ func EditNotice(id string, n notice.Notice) (notice.Notice, error) {
 	findNotice.Update(n)
 	return findNotice, notice.Update(n)
 }
+
+func DelNotice(id string) (notice.Notice, error) {
+	noti, err := notice.GetNotice(notice.Notice{Id: id})
+	if err != nil {
+		if err == notice.ErrNotExistNotice {
+			return noti, notice.ErrAlreadyDeleted
+		}
+
+		return noti, err
+	}
+	return noti, notice.Delete(notice.Notice{Id: id})
+}

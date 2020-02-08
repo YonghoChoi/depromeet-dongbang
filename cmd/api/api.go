@@ -160,3 +160,24 @@ func EditNotice(c echo.Context) error {
 	resp.Data = data
 	return nil
 }
+
+func DelNotice(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	id := c.QueryParam("id")
+	data, err := service.DelNotice(id)
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	resp.Data = data
+	return nil
+}

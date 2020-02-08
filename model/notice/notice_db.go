@@ -2,6 +2,7 @@ package notice
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/YonghoChoi/depromeet-dongbang/pkg/db"
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,6 +10,11 @@ import (
 )
 
 const CollectionName = "notices"
+
+var (
+	ErrAlreadyDeleted = errors.New("already deleted notice")
+	ErrNotExistNotice = errors.New("not exist notice")
+)
 
 func Insert(o Notice) error {
 	_, err := db.GetCollection(CollectionName).InsertOne(context.TODO(), o)
@@ -18,7 +24,11 @@ func Insert(o Notice) error {
 func Delete(o Notice) error {
 	_, err := db.GetCollection(CollectionName).
 		DeleteOne(context.TODO(), bson.M{"_id": o.Id})
-	return err
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func Update(o Notice) error {
