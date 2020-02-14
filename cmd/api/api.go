@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/YonghoChoi/depromeet-dongbang/cmd/api/service"
+	"github.com/YonghoChoi/depromeet-dongbang/model/attendance"
 	"github.com/YonghoChoi/depromeet-dongbang/model/notice"
 	"github.com/YonghoChoi/depromeet-dongbang/model/packet"
 	"github.com/YonghoChoi/depromeet-dongbang/model/user"
@@ -269,6 +270,103 @@ func DelVote(c echo.Context) error {
 
 	id := c.QueryParam("id")
 	data, err := service.DelVote(id)
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	resp.Data = data
+	return nil
+}
+
+func GetAttendances(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	attendances, err := service.GetAttendances()
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+
+	}
+	resp.Data = attendances
+	return nil
+}
+
+func CreateAttendance(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	var o attendance.Attendance
+	if err := c.Bind(&o); err != nil {
+		resp.Code = "500"
+		resp.Message = "invalid data"
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	data, err := service.CreateAttendance(o)
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	resp.Data = data
+	return nil
+}
+
+func EditAttendance(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	id := c.QueryParam("id")
+	var o attendance.Attendance
+	if err := c.Bind(&o); err != nil {
+		resp.Code = "500"
+		resp.Message = "invalid data"
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	data, err := service.EditAttendance(id, o)
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	resp.Data = data
+	return nil
+}
+
+func DelAttendance(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	id := c.QueryParam("id")
+	data, err := service.DelAttendance(id)
 	if err != nil {
 		resp.Code = "500"
 		resp.Message = err.Error()

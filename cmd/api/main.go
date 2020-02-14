@@ -32,6 +32,10 @@ func main() {
 	e.POST("/api/votes", CreateVote)
 	e.PUT("/api/votes", EditVote)
 	e.DELETE("/api/votes", DelVote)
+	e.GET("/api/attendances", GetAttendances)
+	e.POST("/api/attendances", CreateAttendance)
+	e.PUT("/api/attendances", EditAttendance)
+	e.DELETE("/api/attendances", DelAttendance)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }
