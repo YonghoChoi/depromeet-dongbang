@@ -6,6 +6,7 @@ import (
 	"github.com/YonghoChoi/depromeet-dongbang/model/notice"
 	"github.com/YonghoChoi/depromeet-dongbang/model/packet"
 	"github.com/YonghoChoi/depromeet-dongbang/model/user"
+	"github.com/YonghoChoi/depromeet-dongbang/model/vote"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -171,6 +172,103 @@ func DelNotice(c echo.Context) error {
 
 	id := c.QueryParam("id")
 	data, err := service.DelNotice(id)
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	resp.Data = data
+	return nil
+}
+
+func GetVotes(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	votes, err := service.GetVotes()
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+
+	}
+	resp.Data = votes
+	return nil
+}
+
+func CreateVote(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	var v vote.Vote
+	if err := c.Bind(&v); err != nil {
+		resp.Code = "500"
+		resp.Message = "invalid data"
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	data, err := service.CreateVote(v)
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	resp.Data = data
+	return nil
+}
+
+func EditVote(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	id := c.QueryParam("id")
+	var v vote.Vote
+	if err := c.Bind(&v); err != nil {
+		resp.Code = "500"
+		resp.Message = "invalid data"
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	data, err := service.EditVote(id, v)
+	if err != nil {
+		resp.Code = "500"
+		resp.Message = err.Error()
+		fmt.Println(err.Error())
+		return nil
+	}
+
+	resp.Data = data
+	return nil
+}
+
+func DelVote(c echo.Context) error {
+	resp := packet.Resp{Code: "200"}
+	defer func() {
+		if err := c.JSON(http.StatusOK, resp); err != nil {
+			fmt.Println(err.Error())
+		}
+	}()
+
+	id := c.QueryParam("id")
+	data, err := service.DelVote(id)
 	if err != nil {
 		resp.Code = "500"
 		resp.Message = err.Error()
