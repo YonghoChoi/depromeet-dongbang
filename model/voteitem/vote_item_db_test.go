@@ -57,7 +57,7 @@ func TestDelete(t *testing.T) {
 	}
 
 	t.Logf("selected notce. vote : %v\n", votes[0])
-	if err := Delete(votes[0]); err != nil {
+	if err := Delete(votes[0].Id); err != nil {
 		t.Fatal(err.Error())
 	}
 

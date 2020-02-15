@@ -240,15 +240,16 @@ func EditVote(c echo.Context) error {
 	}()
 
 	id := c.QueryParam("id")
-	var v vote.Vote
-	if err := c.Bind(&v); err != nil {
+	var voteReq vote.VoteRequest
+	if err := c.Bind(&voteReq); err != nil {
 		resp.Code = "500"
 		resp.Message = "invalid data"
 		fmt.Println(err.Error())
 		return nil
 	}
 
-	data, err := service.EditVote(id, v)
+	voteReq.Id = id
+	data, err := service.EditVote(voteReq)
 	if err != nil {
 		resp.Code = "500"
 		resp.Message = err.Error()

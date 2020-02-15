@@ -6,7 +6,7 @@ import (
 )
 
 type Vote struct {
-	VoteCommon
+	VoteCommon `bson:",inline"`
 	CreateTime time.Time `json:"createTime" bson:"createTime"`
 	UpdateTime time.Time `json:"updateTime" bson:"updateTime"`
 }

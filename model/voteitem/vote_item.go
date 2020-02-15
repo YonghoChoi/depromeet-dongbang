@@ -19,12 +19,13 @@ func (o *VoteItem) Update(arg VoteItem) {
 	o.UpdateTime = time.Now()
 }
 
-func New(voteId, content string) VoteItem {
+func New(voteId, content string, order int) VoteItem {
 	now := time.Now()
 	n := VoteItem{}
 	n.Id = uuid.New().String()
 	n.VoteId = voteId
 	n.Content = content
+	n.Order = order
 	n.CreateTime = now
 	n.UpdateTime = now
 	return n

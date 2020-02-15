@@ -22,9 +22,9 @@ func Insert(o VoteItem) error {
 	return err
 }
 
-func Delete(o VoteItem) error {
+func Delete(id string) error {
 	_, err := db.GetCollection(CollectionName).
-		DeleteOne(context.TODO(), bson.M{"_id": o.Id})
+		DeleteOne(context.TODO(), bson.M{"_id": id})
 	if err != nil {
 		return err
 	}

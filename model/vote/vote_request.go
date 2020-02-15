@@ -1,10 +1,10 @@
 package vote
 
 type VoteRequest struct {
-	VoteCommon
-	VoteItems []string `json:"voteItems"`
+	VoteCommon `bson:",inline"`
+	VoteItems  []string `json:"voteItems"`
 }
 
-func (o *VoteRequest) UpdateByVote(v VoteCommon) {
+func (o *VoteRequest) SetByVote(v VoteCommon) {
 	o.VoteCommon = v
 }
