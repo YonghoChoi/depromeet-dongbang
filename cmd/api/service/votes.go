@@ -29,7 +29,7 @@ func CreateVote(v vote.Vote) (vote.Vote, error) {
 		return vote.Vote{}, err
 	}
 
-	v = vote.New(u, v.Title, v.Content, v.Votes, v.Options, v.ClosingTime)
+	v = vote.New(u, v.Title, v.Content, v.Options, v.ClosingTime)
 	if err := vote.Insert(v); err != nil {
 		return vote.Vote{}, err
 	}

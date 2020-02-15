@@ -41,7 +41,6 @@ type Vote struct {
 	VoteStatus  VoteStatus `json:"voteStatus" bson:"voteStatus"`
 	Title       string     `json:"title" bson:"title"`
 	Content     string     `json:"content" bson:"content"`
-	Votes       []string   `json:"votes" bson:"votes"`
 	Options     []Option   `json:"options" bson:"options"`
 	ClosingTime time.Time  `json:"closingTime" bson:"closingTime"`
 	CreateTime  time.Time  `json:"createTime" bson:"createTime"`
@@ -52,23 +51,25 @@ func (o *Vote) Update(arg Vote) {
 	o.VoteStatus = arg.VoteStatus
 	o.Title = arg.Title
 	o.Content = arg.Content
-	o.Votes = arg.Votes
 	o.Options = arg.Options
 	o.ClosingTime = arg.ClosingTime
 	o.UpdateTime = time.Now()
 }
 
-func New(u user.User, title, content string, votes []string, options []Option, closingTime time.Time) Vote {
+func New(u user.User, title, content string, options []Option, closingTime time.Time) Vote {
 	now := time.Now()
 	n := Vote{}
 	n.Id = uuid.New().String()
 	n.User = u
 	n.Title = title
 	n.Content = content
-	n.Votes = votes
 	n.Options = options
 	n.ClosingTime = closingTime
 	n.CreateTime = now
 	n.UpdateTime = now
 	return n
+}
+
+type VoteMain struct {
+	Vote
 }
