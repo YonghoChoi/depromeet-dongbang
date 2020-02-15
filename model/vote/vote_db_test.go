@@ -24,10 +24,9 @@ func TestInsert(t *testing.T) {
 	t.Logf("insert user. user : %v\n", u)
 
 	n := New(
-		u,
+		"",
 		"test vote title",
 		"test content",
-		[]string{"투표1", "투표2"},
 		[]Option{Duplicate, Anonymous},
 		time.Now(),
 	)
@@ -51,7 +50,6 @@ func TestUpdate(t *testing.T) {
 	t.Logf("selected notce. vote : %v\n", votes[0])
 
 	votes[0].Content = "modified content"
-	votes[0].Votes = []string{"변경된 투표1", "변경된 투표2"}
 	if err := Update(votes[0]); err != nil {
 		t.Fatal(err.Error())
 	}

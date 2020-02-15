@@ -9,6 +9,7 @@ type VoteItem struct {
 	Id         string    `json:"id" bson:"_id"`
 	VoteId     string    `json:"voteId" bson:"voteId"`
 	Content    string    `json:"content" bson:"content"`
+	Order      int       `json:"order" bson:"order"`
 	CreateTime time.Time `json:"createTime" bson:"createTime"`
 	UpdateTime time.Time `json:"updateTime" bson:"updateTime"`
 }

@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/YonghoChoi/depromeet-dongbang/pkg/db"
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,6 +10,12 @@ import (
 )
 
 const CollectionName = "users"
+
+var (
+	ErrAlreadyDeleted  = errors.New("already deleted users")
+	ErrNotExistUser    = errors.New("not exist user")
+	ErrInvalidDataType = errors.New("invalid data type")
+)
 
 func Insert(u User) error {
 	_, err := db.GetCollection(CollectionName).InsertOne(context.TODO(), u)
@@ -39,13 +46,13 @@ func FindOne(filter bson.D) (User, error) {
 	if result.Err() != nil {
 		fmt.Println(result.Err().Error())
 		if result.Err() == mongo.ErrNoDocuments || result.Err() == mongo.ErrNilDocument {
-			return u, fmt.Errorf("not exist user")
+			return u, ErrNotExistUser
 		}
 	}
 
 	if err := result.Decode(&u); err != nil {
 		fmt.Println(err.Error())
-		return u, fmt.Errorf("invalid user data type")
+		return u, ErrInvalidDataType
 	}
 
 	return u, nil

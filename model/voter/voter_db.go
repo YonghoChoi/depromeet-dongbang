@@ -105,3 +105,12 @@ func GetVoterAll() ([]Voter, error) {
 	filter := bson.D{}
 	return Find(filter)
 }
+
+func GetVoterByVoteItemId(voteItemId string) ([]Voter, error) {
+	filter := bson.D{
+		{"$or", []interface{}{
+			bson.D{{"voteItemId", voteItemId}},
+		}},
+	}
+	return Find(filter)
+}

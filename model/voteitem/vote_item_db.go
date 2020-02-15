@@ -70,7 +70,7 @@ func Find(filter bson.D) ([]VoteItem, error) {
 		return nil, err
 	}
 
-	var notices []VoteItem
+	var voteItems []VoteItem
 	for cur.Next(context.TODO()) {
 		var o VoteItem
 		err := cur.Decode(&o)
@@ -79,7 +79,7 @@ func Find(filter bson.D) ([]VoteItem, error) {
 			continue
 		}
 
-		notices = append(notices, o)
+		voteItems = append(voteItems, o)
 	}
 
 	if err := cur.Err(); err != nil {
@@ -89,7 +89,7 @@ func Find(filter bson.D) ([]VoteItem, error) {
 	if err := cur.Close(context.TODO()); err != nil {
 		return nil, err
 	}
-	return notices, nil
+	return voteItems, nil
 }
 
 func GetVoteItem(o VoteItem) (VoteItem, error) {
@@ -99,6 +99,15 @@ func GetVoteItem(o VoteItem) (VoteItem, error) {
 		}},
 	}
 	return FindOne(filter)
+}
+
+func GetVoteItemByVoteId(voteId string) ([]VoteItem, error) {
+	filter := bson.D{
+		{"$or", []interface{}{
+			bson.D{{"voteId", voteId}},
+		}},
+	}
+	return Find(filter)
 }
 
 func GetVoteItemAll() ([]VoteItem, error) {

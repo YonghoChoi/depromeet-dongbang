@@ -211,7 +211,7 @@ func CreateVote(c echo.Context) error {
 		}
 	}()
 
-	var v vote.Vote
+	var v vote.VoteRequest
 	if err := c.Bind(&v); err != nil {
 		resp.Code = "500"
 		resp.Message = "invalid data"

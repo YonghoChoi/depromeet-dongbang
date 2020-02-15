@@ -8,8 +8,10 @@ import (
 func Join(u user.User) (user.User, error) {
 	findUser, err := user.GetUser(u)
 	if err != nil {
-		fmt.Println(err.Error())
-		return u, fmt.Errorf("database error.\n")
+		if err != user.ErrNotExistUser {
+			fmt.Println(err.Error())
+			return u, fmt.Errorf("database error.\n")
+		}
 	}
 
 	if findUser.Id != "" {
