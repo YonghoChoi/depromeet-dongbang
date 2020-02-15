@@ -49,7 +49,7 @@ jobs:
         cd $GITHUB_WORKSPACE
         export VERSION=`cat version.txt`
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSIONK
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION"
 
 # Github Action Runner의 IP range가 유동적이기 때문에 보안그룹에 등록할 수 없음. self-hosted runner를 사용해야함
