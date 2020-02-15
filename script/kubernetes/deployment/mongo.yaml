@@ -27,8 +27,9 @@ spec:
               mountPath: /data/db
       volumes:
         - name: data
-          persistentVolumeClaim:
-            claimName: pvc-mongo
+          hostPath:
+            path: /home/ubuntu/mongodata
+            type: Directory
       dnsConfig:
         options:
           - name: ndots
