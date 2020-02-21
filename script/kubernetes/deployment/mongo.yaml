@@ -29,7 +29,6 @@ spec:
         - name: data
           hostPath:
             path: /home/ubuntu/mongodata
-            type: Directory
       dnsConfig:
         options:
           - name: ndots
