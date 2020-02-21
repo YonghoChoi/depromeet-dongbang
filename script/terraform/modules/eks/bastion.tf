@@ -58,7 +58,7 @@ resource "aws_spot_instance_request" "bastion" {
     ]
   }
 
-  depends_on = ["aws_eks_cluster.cluster"]
+  depends_on = ["aws_eks_cluster.cluster", "aws_eks_node_group.worker"]
 
   timeouts {
     create = "30m"

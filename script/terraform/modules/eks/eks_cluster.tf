@@ -1,6 +1,6 @@
 resource "aws_eks_cluster" "cluster" {
   name     = var.cluster_name
-  role_arn = aws_iam_role.eks-master.arn
+  role_arn = aws_iam_role.eks_master.arn
   version  = var.cluster_version
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
@@ -12,7 +12,7 @@ resource "aws_eks_cluster" "cluster" {
   }
 
   depends_on = [
-    "aws_iam_role_policy_attachment.eks-cluster",
-    "aws_iam_role_policy_attachment.eks-service",
+    "aws_iam_role_policy_attachment.eks_cluster",
+    "aws_iam_role_policy_attachment.eks_service",
   ]
 }
