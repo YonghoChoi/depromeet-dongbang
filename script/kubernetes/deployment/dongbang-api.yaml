@@ -21,7 +21,7 @@ spec:
           command: ['sh', '-c', 'until nc -z -w5 mongo.default.svc.cluster.local 27017; do echo waiting for mongo; sleep 2; done;']
       containers:
         - name: dongbnag-api
-          image: "992189553983.dkr.ecr.ap-northeast-2.amazonaws.com/dongbang-api:fa582934834291b1eb1324693067435f5346ac5e"
+          image: "992189553983.dkr.ecr.ap-northeast-2.amazonaws.com/dongbang-api"
           imagePullPolicy: Always
           ports:
             - containerPort: 80
