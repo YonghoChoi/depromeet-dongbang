@@ -15,8 +15,10 @@ resource "aws_spot_instance_request" "bastion" {
   user_data = local.bastion_userdata
 
   tags = merge(
-  map("key", "Name", "value", var.cluster_name),
-  var.base_tags
+    var.base_tags,
+    {
+      "Name" = "${var.cluster_name}-bastion",
+    },
   )
 
   connection {
@@ -32,35 +34,45 @@ resource "aws_spot_instance_request" "bastion" {
   }
 
   provisioner "remote-exec" {
-  inline = [
-    "curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.8/2019-08-14/bin/linux/amd64/aws-iam-authenticator",
-    "mv ./aws-iam-authenticator /usr/bin/",
-    "aws-iam-authenticator version",
+    inline = [
+      "curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.8/2019-08-14/bin/linux/amd64/aws-iam-authenticator",
+      "chmod +x ./aws-iam-authenticator",
+      "sudo mv ./aws-iam-authenticator /usr/local/bin/",
+      "aws-iam-authenticator version",
 
-    "mkdir -p ~/.kube",
-    "sudo curl --silent --location -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl",
-    "sudo chmod +x /usr/local/bin/kubectl",
-    "sudo kubectl version",
-    "echo '${local.kubeconfig}' | tee ~/.kube/config &> /dev/null",
-    "echo '${local.eks_configmap}' | tee ~/configmap.yaml &> /dev/null",
-    "dos2unix ~/.kube/config",
-    "dos2unix ~/configmap.yaml",
-    "dos2unix ~/k8s/*.sh",
-    "chmod +x ~/k8s/*.sh",
+      "mkdir -p ~/.kube",
+      "sudo curl --silent --location -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl",
+      "sudo chmod +x /usr/local/bin/kubectl",
+      "sudo kubectl version",
+      "echo '${local.kubeconfig}' | tee ~/.kube/config &> /dev/null",
+      "echo '${local.eks_configmap}' | tee ~/configmap.yaml &> /dev/null",
+      "dos2unix ~/.kube/config",
+      "dos2unix ~/configmap.yaml",
+      "dos2unix ~/k8s/*.sh",
+      "chmod +x ~/k8s/*.sh",
 
-    "mkdir -p ~/.aws",
-    "echo '${data.aws_ssm_parameter.aws_credential.value}' | tee ~/.aws/credentials &> /dev/null",
+      "mkdir -p ~/.aws",
+      "echo '${data.aws_ssm_parameter.aws_credential.value}' | tee ~/.aws/credentials &> /dev/null",
 
-    "kubectl apply -f ~/configmap.yaml"
-  ]
-}
+      "kubectl apply -f ~/configmap.yaml"
+    ]
+  }
 
-depends_on = ["aws_eks_cluster.cluster"]
+  provisioner "remote-exec" {
+    when    = "destroy"
+    inline = [
+      "cd ~/k8s",
+      "cd ./delete.sh",
+      "sleep 30"
+    ]
+  }
 
-timeouts {
-  create = "30m"
-  delete = "30m"
-}
+  depends_on = ["aws_eks_cluster.cluster"]
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
 }
 
 locals {
