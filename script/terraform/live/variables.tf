@@ -7,5 +7,6 @@ locals {
     Environment = local.env
     Terraform = "true"
   }
+  ssh_password_parameter_name = "dongbang-password"
 }
 

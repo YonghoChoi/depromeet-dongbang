@@ -19,15 +19,15 @@ variable "eks_node_instance_type" {
 }
 
 variable "desired_capacity" {
-  default = 2
+  default = 1
 }
 
 variable "max_size" {
-  default = 3
+  default = 2
 }
 
 variable "min_size" {
-  default = 2
+  default = 1
 }
 
 variable "key_pair" {
@@ -49,6 +49,10 @@ variable "volume_size" {
 }
 
 variable "ssh_password_parameter_name" {
+  type = "string"
+}
+
+variable "aws_credential_parameter_name" {
   type = "string"
 }
 

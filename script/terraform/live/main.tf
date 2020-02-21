@@ -29,6 +29,29 @@ module "dongbang" {
   public_subnet_ids = module.vpc.public_subnets
   eks_bastion_instance_type = "c4.large"
   eks_node_instance_type = "c4.large"
-  ssh_password_parameter_name = "dongbang-password"
+  ssh_password_parameter_name = local.ssh_password_parameter_name
+  aws_credential_parameter_name = "dongbang-credential"
   base_tags = local.base_tags
+}
+
+
+resource "null_resource" "wait_for_cluster" {
+  depends_on = [
+    module.dongbang
+  ]
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    password    = data.aws_ssm_parameter.ec2_password.value
+    host        = module.dongbang.bastion_public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir ~/mongodata",
+      "cd ~/k8s",
+      "./create.sh"
+    ]
+  }
 }

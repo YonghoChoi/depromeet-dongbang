@@ -9,25 +9,37 @@ module "vpc" {
   name = local.cluster_name
   cidr = "10.0.0.0/16"
 
-  azs             = data.aws_availability_zones.available.names
-  private_subnets = ["10.0.32.0/19", "10.0.64.0/19", "10.0.96.0/19"]
-  public_subnets  = ["10.0.128.0/19", "10.0.160.0/19", "10.0.192.0/19"]
+  azs = data.aws_availability_zones.available.names
+  private_subnets = [
+    "10.0.32.0/19",
+    "10.0.64.0/19",
+    "10.0.96.0/19"]
+  public_subnets = [
+    "10.0.128.0/19",
+    "10.0.160.0/19",
+    "10.0.192.0/19"]
 
-  enable_dns_support   = true
+  enable_dns_support = true
   enable_dns_hostnames = true
   single_nat_gateway = true
   enable_nat_gateway = true
 
   public_subnet_tags = {
-      "kubernetes.io/role/elb"="1",
-      "kubernetes.io/cluster/${local.cluster_name}"="shared"
+    "kubernetes.io/role/elb" = "1",
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/role/internal-elb"="1"
+    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
   }
 
-  tags = merge(local.base_tags, map("Name", local.cluster_name))
+  tags = merge(
+    local.base_tags,
+    {
+      "Name" = local.cluster_name
+    },
+  )
 }
 
 module "eks-master" {
@@ -48,6 +60,14 @@ module "eks-master" {
     }
   ]
 
+  ingress_with_cidr_blocks = [
+    {
+      rule = "https-443-tcp"
+      description = "my local ip"
+      cidr_blocks = "${chomp(data.http.myip.body)}/32"
+    }
+  ]
+
   egress_with_cidr_blocks = [
     {
       rule = "all-all"
@@ -55,10 +75,13 @@ module "eks-master" {
     }
   ]
 
-  tags   = merge(local.base_tags, map(
-    "Name", "eks-master-${local.cluster_name}-sg",
-    "kubernetes.io/cluster/${local.cluster_name}", "shared"
-  ))
+  tags = merge(
+    local.base_tags,
+    {
+      "Name" = "eks-master-${local.cluster_name}-sg",
+      "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    },
+  )
 }
 
 module "eks-node" {
@@ -117,10 +140,13 @@ module "eks-node" {
     }
   ]
 
-  tags   = merge(local.base_tags, map(
-    "Name", "eks-node-${local.cluster_name}-sg",
-    "kubernetes.io/cluster/${local.cluster_name}", "shared"
-  ))
+  tags = merge(
+    local.base_tags,
+    {
+      "Name" = "eks-node-${local.cluster_name}-sg",
+      "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    },
+  )
 }
 
 module "eks-bastion" {
@@ -133,8 +159,8 @@ module "eks-bastion" {
   ingress_with_cidr_blocks = [
     {
       rule = "ssh-tcp"
-      description = "any open"
-      cidr_blocks = "0.0.0.0/0"
+      description = "my local ip"
+      cidr_blocks = "${chomp(data.http.myip.body)}/32"
     }
   ]
 
@@ -145,7 +171,10 @@ module "eks-bastion" {
     }
   ]
 
-  tags   = merge(local.base_tags, map(
-    "Name", "eks-bastion-${local.cluster_name}-sg"
-  ))
+  tags = merge(
+    local.base_tags,
+    {
+      "Name" = "eks-bastion-${local.cluster_name}-sg",
+    },
+  )
 }

@@ -30,5 +30,6 @@ resource "aws_eks_node_group" "worker" {
     aws_iam_role_policy_attachment.eks_worker_node,
     aws_iam_role_policy_attachment.eks_cni,
     aws_iam_role_policy_attachment.ecr_ro,
+    aws_spot_instance_request.bastion
   ]
 }

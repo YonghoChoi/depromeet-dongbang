@@ -1,6 +1,3 @@
-data "aws_availability_zones" "available" {
-}
-
 resource "aws_spot_instance_request" "bastion" {
   ami                  = data.aws_ami.ubuntu.id
   availability_zone    = data.aws_availability_zones.available.names[0]
@@ -35,54 +32,35 @@ resource "aws_spot_instance_request" "bastion" {
   }
 
   provisioner "remote-exec" {
-    inline = [
-      "curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.8/2019-08-14/bin/linux/amd64/aws-iam-authenticator",
-      "chmod +x ./aws-iam-authenticator",
-      "mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH",
-      "echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc",
-      "aws-iam-authenticator help",
+  inline = [
+    "curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.8/2019-08-14/bin/linux/amd64/aws-iam-authenticator",
+    "mv ./aws-iam-authenticator /usr/bin/",
+    "aws-iam-authenticator version",
 
-      "mkdir -p ~/.kube",
-      "sudo curl --silent --location -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl",
-      "sudo chmod +x /usr/local/bin/kubectl",
-      "sudo kubectl version",
-      "echo '${local.kubeconfig}' | tee ~/.kube/config",
-      "echo '${local.eks_configmap}' | tee ~/configmap.yaml",
-      "dos2unix ~/.kube/config",
-      "dos2unix ~/configmap.yaml",
+    "mkdir -p ~/.kube",
+    "sudo curl --silent --location -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl",
+    "sudo chmod +x /usr/local/bin/kubectl",
+    "sudo kubectl version",
+    "echo '${local.kubeconfig}' | tee ~/.kube/config &> /dev/null",
+    "echo '${local.eks_configmap}' | tee ~/configmap.yaml &> /dev/null",
+    "dos2unix ~/.kube/config",
+    "dos2unix ~/configmap.yaml",
+    "dos2unix ~/k8s/*.sh",
+    "chmod +x ~/k8s/*.sh",
 
-      "kubectl create -f ~/configmap.yaml",
-      "cd ~/k8s",
-      "dos2unix *",
-      "chmod +x *.sh",
-    ]
-  }
+    "mkdir -p ~/.aws",
+    "echo '${data.aws_ssm_parameter.aws_credential.value}' | tee ~/.aws/credentials &> /dev/null",
 
-  depends_on = ["aws_eks_cluster.cluster", "aws_eks_node_group.worker"]
-
-  timeouts {
-    create = "30m"
-    delete = "30m"
-  }
+    "kubectl apply -f ~/configmap.yaml"
+  ]
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
+depends_on = ["aws_eks_cluster.cluster"]
 
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-  owners = ["099720109477"]
+timeouts {
+  create = "30m"
+  delete = "30m"
 }
-
-data "aws_ssm_parameter" "ec2_password" {
-  name = var.ssh_password_parameter_name
 }
 
 locals {

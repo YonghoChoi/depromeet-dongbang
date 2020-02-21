@@ -1,7 +1,3 @@
-output "kubectl_config" {
-  value = local.kubeconfig
-}
-
-output "eks_configmap" {
-  value = local.eks_configmap
+output "bastion_public_ip" {
+  value = aws_spot_instance_request.bastion.public_ip
 }
