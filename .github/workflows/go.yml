@@ -40,8 +40,9 @@ jobs:
         VERSION: ${{ steps.build-init.outputs.version }}
       run: |
         mkdir -p ./output/$GOOS
+        mkdir -p ./output/$GOOS/conf
         go build -o ./output/$GOOS/$APP_NAME ./cmd/api
-        cp -R ./cmd/api/conf ./output/$GOOS/
+        cp ./cmd/api/conf/config.yml ./output/$GOOS/
         tar czvf $APP_NAME-$GOOS-$VERSION.tar.gz ./output/$GOOS/
         ls -l
 
@@ -54,8 +55,9 @@ jobs:
         VERSION: ${{ steps.build-init.outputs.version }}
       run: |
         mkdir -p ./output/$GOOS
+        mkdir -p ./output/$GOOS/conf
         go build -o ./output/$GOOS/$APP_NAME.exe ./cmd/api
-        cp -R ./cmd/api/conf ./output/$GOOS/
+        cp ./cmd/api/conf/config.yml ./output/$GOOS/
         zip -r $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
         ls -l
 
