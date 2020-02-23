@@ -99,11 +99,10 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VERSION: ${{ steps.build-init.outputs.version }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: ./dongbang-api-windows-$VERSION.zip
-        asset_name: dongbang-api-windows-$VERSION.zip
+        asset_path: ./dongbang-api-windows-${{ steps.build-init.outputs.version }}.zip
+        asset_name: dongbang-api-windows-${{ steps.build-init.outputs.version }}.zip
         asset_content_type: application/zip
 
 # Github Action Runner의 IP range가 유동적이기 때문에 보안그룹에 등록할 수 없음. self-hosted runner를 사용해야함
