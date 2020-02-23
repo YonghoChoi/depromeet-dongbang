@@ -24,9 +24,10 @@ jobs:
         ls -l
         go mod init github.com/YonghoChoi/depromeet-dongbang
         go mod tidy
+        GIT_HASH=$(git rev-parse --short "$GITHUB_SHA")
         VERSION=`cat ./version.txt`
         echo $VERSION
-        echo "::set-output name=version::$VERSION"
+        echo "::set-output name=version::$VERSION-$GIT_HASH"
 
     - name: Build Linux
       id: build-linux
@@ -51,7 +52,7 @@ jobs:
       run: |
         mkdir -p ./output/$GOOS
         go build -o ./output/$GOOS/$APP_NAME.exe ./cmd/api
-        zip $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
+        zip -r $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
         ls -l
 
     - name: Configure AWS credentials
