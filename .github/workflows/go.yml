@@ -33,27 +33,23 @@ jobs:
       env:
         GOARCH: amd64
         GOOS: linux
+        APP_NAME: dongbang-api
         VERSION: ${{ steps.build-init.outputs.version }}
       run: |
-        mkdir -p ./output/linux
-        ls -l
-        cd ./cmd/api
-        go build -v . -o ../../output/linux
-        cd ../../
-        tar czvf dongbang-api-linux-$VERSION.tar.gz ./output/linux/
+        mkdir -p ./output/$GOOS
+        go build -v . -o ./output/$GOOS/$APP_NAME ./cmd/api
+        zip $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
     - name: Build Windows
       id: build-windows
       env:
         GOARCH: amd64
         GOOS: windows
+        APP_NAME: dongbang-api
         VERSION: ${{ steps.build-init.outputs.version }}
       run: |
-        mkdir -p ./output/windows
-        ls -l
-        cd ./cmd/api
-        go build -v . -o ../../output/windows
-        cd ../../
-        zip dongbang-api-windows-$VERSION.zip ./output/windows/
+        mkdir -p ./output/$GOOS
+        go build -v . -o ./output/$GOOS/$APP_NAME.exe ./cmd/api
+        zip $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
