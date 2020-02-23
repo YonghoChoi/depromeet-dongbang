@@ -53,6 +53,20 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$VERSION"
+    - name: Create Release
+      id: create-release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # github 내부에서 적용되는 시크릿 변수이기 때문에 별도로 만들지 않아도 됨
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: false
 
 # Github Action Runner의 IP range가 유동적이기 때문에 보안그룹에 등록할 수 없음. self-hosted runner를 사용해야함
 #    - name: Deploy dongbang
