@@ -26,7 +26,7 @@ jobs:
         go mod tidy
         GIT_HASH=$(git rev-parse --short "$GITHUB_SHA")
         VERSION=`cat ./version.txt`
-        GIT_COMMIT_MSG=`git show -s --format=%s`
+        GIT_COMMIT_MSG=`git show -s`
         echo $GIT_COMMIT_MSG
         echo "::set-output name=version::$VERSION-$GIT_HASH"
         echo "::set-output name=git-commit-msg::$GIT_COMMIT_MSG"
