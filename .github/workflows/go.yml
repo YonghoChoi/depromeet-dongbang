@@ -94,8 +94,20 @@ jobs:
           ${{ steps.build-init.outputs.git-commit-msg }}
         draft: false
         prerelease: false
-    - name: Upload Release Asset
-      id: upload-release-asset
+
+    - name: Upload Linux Release Asset
+      id: upload-release-linux-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: ./dongbang-api-linux-${{ steps.build-init.outputs.version }}.tar.gz
+        asset_name: dongbang-api-linux-${{ steps.build-init.outputs.version }}.tar.gz
+        asset_content_type: application/gzip
+
+    - name: Upload Windows Release Asset
+      id: upload-release-windows-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -104,6 +116,8 @@ jobs:
         asset_path: ./dongbang-api-windows-${{ steps.build-init.outputs.version }}.zip
         asset_name: dongbang-api-windows-${{ steps.build-init.outputs.version }}.zip
         asset_content_type: application/zip
+
+
 
 # Github Action Runner의 IP range가 유동적이기 때문에 보안그룹에 등록할 수 없음. self-hosted runner를 사용해야함
 #    - name: Deploy dongbang
