@@ -37,7 +37,7 @@ jobs:
         VERSION: ${{ steps.build-init.outputs.version }}
       run: |
         mkdir -p ./output/$GOOS
-        go build -v . -o ./output/$GOOS/$APP_NAME ./cmd/api
+        go build -o ./output/$GOOS/$APP_NAME ./cmd/api
         zip $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
     - name: Build Windows
       id: build-windows
@@ -48,7 +48,7 @@ jobs:
         VERSION: ${{ steps.build-init.outputs.version }}
       run: |
         mkdir -p ./output/$GOOS
-        go build -v . -o ./output/$GOOS/$APP_NAME.exe ./cmd/api
+        go build -o ./output/$GOOS/$APP_NAME.exe ./cmd/api
         zip $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
 
     - name: Configure AWS credentials
