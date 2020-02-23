@@ -18,16 +18,43 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Get dependencies
+      id: build-init
       run: |
+        mkdir -p output
         ls -l
         go mod init github.com/YonghoChoi/depromeet-dongbang
         go mod tidy
+        VERSION=`cat ./version.txt`
+        echo $VERSION
+        echo "::set-output name=version::$VERSION"
 
-    - name: Build
+    - name: Build Linux
+      id: build-linux
+      env:
+        GOARCH: amd64
+        GOOS: linux
+        VERSION: ${{ steps.build-init.outputs.version }}
       run: |
+        mkdir -p ./output/linux
         ls -l
         cd ./cmd/api
-        go build -v .
+        go build -v . -o ../../output/linux
+        cd ../../
+        tar czvf dongbang-api-linux-$VERSION.tar.gz ./output/linux/
+    - name: Build Windows
+      id: build-windows
+      env:
+        GOARCH: amd64
+        GOOS: windows
+        VERSION: ${{ steps.build-init.outputs.version }}
+      run: |
+        mkdir -p ./output/windows
+        ls -l
+        cd ./cmd/api
+        go build -v . -o ../../output/windows
+        cd ../../
+        zip dongbang-api-windows-$VERSION.zip ./output/windows/
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -59,14 +86,25 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # github 내부에서 적용되는 시크릿 변수이기 때문에 별도로 만들지 않아도 됨
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ steps.build.outputs.version }}
+        release_name: Release v${{ steps.build.outputs.version }}
         body: |
           Changes in this Release
           - First Change
           - Second Change
         draft: false
         prerelease: false
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERSION: ${{ steps.build-init.outputs.version }}
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: ./dongbang-api-windows-$VERSION.zip
+        asset_name: dongbang-api-windows-$VERSION.zip
+        asset_content_type: application/zip
 
 # Github Action Runner의 IP range가 유동적이기 때문에 보안그룹에 등록할 수 없음. self-hosted runner를 사용해야함
 #    - name: Deploy dongbang
