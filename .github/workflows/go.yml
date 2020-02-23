@@ -41,6 +41,7 @@ jobs:
       run: |
         mkdir -p ./output/$GOOS
         go build -o ./output/$GOOS/$APP_NAME ./cmd/api
+        cp -R ./cmd/api/conf ./output/$GOOS/
         tar czvf $APP_NAME-$GOOS-$VERSION.tar.gz ./output/$GOOS/
         ls -l
 
@@ -54,6 +55,7 @@ jobs:
       run: |
         mkdir -p ./output/$GOOS
         go build -o ./output/$GOOS/$APP_NAME.exe ./cmd/api
+        cp -R ./cmd/api/conf ./output/$GOOS/
         zip -r $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
         ls -l
 
