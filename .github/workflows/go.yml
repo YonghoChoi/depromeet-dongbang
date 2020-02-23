@@ -38,7 +38,9 @@ jobs:
       run: |
         mkdir -p ./output/$GOOS
         go build -o ./output/$GOOS/$APP_NAME ./cmd/api
-        zip $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
+        tar czvf $APP_NAME-$GOOS-$VERSION.tar.gz ./output/$GOOS/
+        ls -l
+
     - name: Build Windows
       id: build-windows
       env:
@@ -50,6 +52,7 @@ jobs:
         mkdir -p ./output/$GOOS
         go build -o ./output/$GOOS/$APP_NAME.exe ./cmd/api
         zip $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
+        ls -l
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
