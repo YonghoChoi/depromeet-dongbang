@@ -86,7 +86,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # github 내부에서 적용되는 시크릿 변수이기 때문에 별도로 만들지 않아도 됨
       with:
-        tag_name: ${{ steps.build-init.outputs.version }}
+        tag_name: v${{ steps.build-init.outputs.version }}
         release_name: Release v${{ steps.build-init.outputs.version }}
         body: |
           Changes in this Release
