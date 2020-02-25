@@ -58,7 +58,8 @@ jobs:
         mkdir -p ./output/$GOOS/conf
         go build -o ./output/$GOOS/$APP_NAME.exe ./cmd/api
         cp ./cmd/api/conf/config.yml ./output/$GOOS/conf/
-        zip -r $APP_NAME-$GOOS-$VERSION.zip ./output/$GOOS/
+        cd ./output/$GOOS
+        zip -r $APP_NAME-$GOOS-$VERSION.zip ./*
         ls -l
 
     - name: Configure AWS credentials
