@@ -59,7 +59,7 @@ jobs:
         go build -o ./output/$GOOS/$APP_NAME.exe ./cmd/api
         cp ./cmd/api/conf/config.yml ./output/$GOOS/conf/
         cd ./output/$GOOS
-        zip -r $APP_NAME-$GOOS-$VERSION.zip ./*
+        zip -r ../../$APP_NAME-$GOOS-$VERSION.zip ./*
         ls -l
 
     - name: Configure AWS credentials
