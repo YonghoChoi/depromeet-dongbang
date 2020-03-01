@@ -43,7 +43,8 @@ jobs:
         mkdir -p ./output/$GOOS/conf
         go build -o ./output/$GOOS/$APP_NAME ./cmd/api
         cp ./cmd/api/conf/config.yml ./output/$GOOS/conf/
-        tar czvf $APP_NAME-$GOOS-$VERSION.tar.gz ./output/$GOOS/
+        cd ./output/$GOOS
+        tar czvf $APP_NAME-$GOOS-$VERSION.tar.gz ./*
         ls -l
 
     - name: Build Windows
@@ -74,7 +75,8 @@ jobs:
         mkdir -p ./output/$GOOS/conf
         go build -o ./output/$GOOS/$APP_NAME ./cmd/api
         cp ./cmd/api/conf/config.yml ./output/$GOOS/conf/
-        tar czvf $APP_NAME-$GOOS-$VERSION.tar.gz ./output/$GOOS/
+        cd ./output/$GOOS
+        tar czvf $APP_NAME-$GOOS-$VERSION.tar.gz ./*
         ls -l
 
     - name: Configure AWS credentials
