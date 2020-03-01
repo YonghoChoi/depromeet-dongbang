@@ -62,6 +62,21 @@ jobs:
         zip -r ../../$APP_NAME-$GOOS-$VERSION.zip ./*
         ls -l
 
+    - name: Build Darwin
+      id: build-darwin
+      env:
+        GOARCH: amd64
+        GOOS: darwin
+        APP_NAME: dongbang-api
+        VERSION: ${{ steps.build-init.outputs.version }}
+      run: |
+        mkdir -p ./output/$GOOS
+        mkdir -p ./output/$GOOS/conf
+        go build -o ./output/$GOOS/$APP_NAME ./cmd/api
+        cp ./cmd/api/conf/config.yml ./output/$GOOS/conf/
+        tar czvf $APP_NAME-$GOOS-$VERSION.tar.gz ./output/$GOOS/
+        ls -l
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -122,7 +137,16 @@ jobs:
         asset_name: dongbang-api-windows-${{ steps.build-init.outputs.version }}.zip
         asset_content_type: application/zip
 
-
+    - name: Upload Darwin Release Asset
+      id: upload-release-darwin-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: ./dongbang-api-darwin-${{ steps.build-init.outputs.version }}.tar.gz
+        asset_name: dongbang-api-darwin-${{ steps.build-init.outputs.version }}.tar.gz
+        asset_content_type: application/gzip
 
 # Github Action Runner의 IP range가 유동적이기 때문에 보안그룹에 등록할 수 없음. self-hosted runner를 사용해야함
 #    - name: Deploy dongbang
