@@ -1,5 +1,7 @@
 # 동방 (2020년 디프만 파이널 프로젝트)
 
+<img align="left" src="https://github.com/yonghochoi/depromeet-dongbang/workflows/Go/badge.svg">
+
 ## 소개
 
 ![](img/동방1.png)
